@@ -1,0 +1,53 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title %}
+        Profile
+{% endblock %}
+{% block content %}
+<h1>Profile</h1>
+<style>
+body {
+  background-image: url('{% static 'theblog/background_images/wallpapers_054.jpg' %}');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+</style>
+<br/><br/>
+{% if page_user.profile_pic %}
+      <img src="{{ page_user.profile_pic.url }}" width="200" height="200" class="rounded-circle">
+{% else %}
+        <img src="{% static 'theblog/images/default.jpg' %}" width="200" height="200" class="rounded-circle">
+{% endif %}
+        </div>
+            <div class="col-md-10">
+            <div class="card-body">
+            <h5 class="card-title">
+            {{ page_user.user.first_name }}
+            {{ page_user.user.last_name }}
+            </h5>
+<p class="small text-muted">
+
+    {% if  page_user.website_url %}
+<a href="{{ post.author.website_url }}">Website</a> |
+    {% endif %}
+    {% if page_user.facebook_url %}
+<a href="{{ post.author.facebook_url }}">Facebook</a> |
+    {% endif %}
+    {% if page_user.twitter_url %}
+<a href="{{ post.author.twitter_url }}">Twitter</a> |
+    {% endif %}
+    {% if page_user.instagram_url %}
+<a href="{{ post.author.instagram_url }}">Instagram</a>
+    {% endif %}
+
+</p>
+<p class="card-text">
+    {{ page_user.bio }}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

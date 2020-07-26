@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+{% block title %}
+        Category sorted
+{% endblock %}
+{% block content %}
+
+{% if category_posts %}
+
+    <h1>{{ cat }}</h1>
+    <ul>
+    {% for post in category_posts %}
+
+            <li><a href="{% url 'article-detail' post.pk %}">{{  post.title }} </a> {{ post.category }} by<b> {{ post.author.first_name }}
+                {{ post.author.last_name }} </b>on {{ post.post_date }} {{ post.post_time }} <small>
+
+                {% if user.is_authenticated %}
+                    {% if user.id == post.author.id %}
+                        <a href="{% url 'update_post' post.pk %}" ><i><b>Edit</b></i></a> |
+                        <a href="{% url 'delete_post' post.pk %}" ><i><b>Delete</b></i></a>
+                    {% endif %}
+                {% endif %}
+            </small> <br/>
+    {{ post.body | slice:":200"|safe }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+<h1>Sorry {{ cat }} category does not exist in the Database!</h1>
+{% endif %}
+{% endblock %}

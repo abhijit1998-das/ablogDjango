@@ -1,0 +1,100 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title %}
+        Home Page
+{% endblock %}
+{% block content %}
+<style>
+body {
+  background-image: url('{% static 'theblog/background_images/wallpapers_054.jpg' %}');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+</style>
+
+
+    <h1>News Feed</h1></p>
+
+
+
+    {% for post in object_list %}
+        <BIG><b>
+
+                <div class="shadow p-3 mb-5 bg-white rounded">
+
+
+                    {% if post.author.profile.profile_pic %}
+      <a href="{% url 'show_profile_page' post.author.profile.id %}">
+          <img src="{{ post.author.profile.profile_pic.url }}" width="30" height="30" class="rounded-circle"></a>
+{% else %}
+        <a href="{% url 'show_profile_page' post.author.profile.id %}">
+            <img src="{% static 'theblog/images/default.jpg' %}" width="30" height="30" class="rounded-circle"></a>
+{% endif %}
+                    {{ post.author.first_name }} {{ post.author.last_name }}
+       <small>&nbsp;<i class="text-black-50">{{ post.post_date }} {{ post.post_time }} Category:({{ post.category }})</i></small>
+
+
+            {% if user.is_authenticated %}
+                {% if user.id == post.author.id %}
+                    <a href="{% url 'update_post' post.pk %}" ><i><b>Edit</b></i></a> |
+                    <a href="{% url 'delete_post' post.pk %}" ><i><b>Delete</b></i></a>
+                {% endif %}
+            {% endif %}
+        </small> <br/><br/>
+            <a href="{% url 'article-detail' post.pk %}">{{ post.body | slice:":500"|safe }}
+            {% if post.header_image %}
+                <img src="{{ post.header_image.url }}">
+            {% endif %}
+            </a><br/><br/>  <br/> {{ post.snippet }} <br/> <br/>
+
+
+<!--like and unlike -->
+<form action="{% url 'like_post' post.pk %}" method="POST">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        {% if liked %}
+            <button type="submit" name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Unlike
+            </button>
+        {% else %}
+            <button type="submit" name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like
+            </button>
+        {% endif %}
+    <a class="text-muted"><i><small>{{ post.total_likes }} Likes</small></i></a>
+        {% else %}
+        <small><i><a href="{% url 'login' %}">Login</a> to like</i></small>
+    {% endif %}
+</form>
+<br/>
+
+{% for comment in post.comments.all %}
+<div class="shadow p-3 mb-5 bg-white rounded">
+
+       {% if comments.profile_pic %}
+       <img src="{{ comments.profile_pic.url }}" width="30" height="30" class="rounded-circle">
+{% else %}
+       <img src="{% static 'theblog/images/default.jpg' %}"  width="30" height="30" class="rounded-circle">
+        {% endif %}
+
+
+    <strong>
+    {{ comment.name }}
+        <small>&nbsp;<i class="text-black-50">{{ comment.date_added }}</i></small>
+</strong>
+    <br/>
+    &nbsp;
+    <p>{{ comment.body }}</p>
+
+</div>
+ {% endfor %}
+
+    </div>
+
+
+
+
+
+    {% endfor %}
+
+
+{% endblock %}
